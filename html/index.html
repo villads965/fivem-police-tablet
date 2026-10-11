@@ -1,99 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Police Tablet</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div id="tablet" class="hidden">
-      <div class="tablet-header">
-        <div class="title-wrap">
-          <div class="logo">P</div>
-          <div>
-            <p class="subtitle">Los Santos</p>
-            <h1>Police Console</h1>
-          </div>
-        </div>
-        <button id="closeTablet" class="close-btn">X</button>
-      </div>
+local function notifyClient(source, message)
+    TriggerClientEvent('police_tablet:showToast', source, message)
+end
 
-      <div class="tablet-body">
-        <aside class="sidebar">
-          <button class="nav active" data-panel="dashboard">Dashboard</button>
-          <button class="nav" data-panel="incidents">Incidents</button>
-          <button class="nav" data-panel="tickets">Tickets</button>
-          <button class="nav" data-panel="fleet">Fleet</button>
-          <button class="nav" data-panel="officers">Officers</button>
-        </aside>
+RegisterNetEvent('police_tablet:issueFine')
+AddEventHandler('police_tablet:issueFine', function(name, amount)
+    local src = source
+    if name and amount then
+        TriggerClientEvent('police_tablet:showToast', src, 'Fine issued: ' .. name .. ' - $' .. tostring(amount))
+    end
+end)
 
-        <main class="content">
-          <section class="panel active" id="dashboard">
-            <div class="cards">
-              <div class="card">
-                <span>Calls</span>
-                <strong id="callsCount">0</strong>
-              </div>
-              <div class="card">
-                <span>Arrests</span>
-                <strong id="arrestsCount">0</strong>
-              </div>
-              <div class="card">
-                <span>Tickets</span>
-                <strong id="ticketsCount">0</strong>
-              </div>
-              <div class="card">
-                <span>Boats</span>
-                <strong id="boatsCount">0</strong>
-              </div>
-            </div>
+RegisterNetEvent('police_tablet:setFleetStatus')
+AddEventHandler('police_tablet:setFleetStatus', function(id, status)
+    local src = source
+    if id and status then
+        TriggerClientEvent('police_tablet:showToast', src, 'Fleet update: Unit ' .. tostring(id) .. ' -> ' .. tostring(status))
+    end
+end)
 
-            <div class="info-row">
-              <div class="box">
-                <h3>Latest Call</h3>
-                <p>Bank robbery in Vinewood</p>
-              </div>
-              <div class="box">
-                <h3>Officer</h3>
-                <p id="officerName">-</p>
-              </div>
-            </div>
-          </section>
+RegisterNetEvent('police_tablet:toggleAction')
+AddEventHandler('police_tablet:toggleAction', function(action)
+    local src = source
+    TriggerClientEvent('police_tablet:showToast', src, 'Action triggered: ' .. tostring(action))
+end)
 
-          <section class="panel" id="incidents">
-            <h3>Active Incidents</h3>
-            <div id="incidentList" class="list"></div>
-          </section>
-
-          <section class="panel" id="tickets">
-            <h3>Issue Fine</h3>
-            <div class="fine-form">
-              <input id="fineName" type="text" placeholder="Violation name" />
-              <input id="fineAmount" type="number" placeholder="Amount" />
-              <button id="issueFineBtn">Issue Fine</button>
-            </div>
-            <div id="fineList" class="list"></div>
-          </section>
-
-          <section class="panel" id="fleet">
-            <h3>Fleet</h3>
-            <div id="fleetList" class="list"></div>
-          </section>
-
-          <section class="panel" id="officers">
-            <h3>Officer Overview</h3>
-            <div class="box large">
-              <p><strong>Officer:</strong> <span id="officerName2">-</span></p>
-              <p><strong>ID:</strong> <span id="officerId">-</span></p>
-              <p><strong>Rank:</strong> Officer</p>
-              <p><strong>Duty:</strong> Patrol / Harbor</p>
-            </div>
-          </section>
-        </main>
-      </div>
-    </div>
-
-    <script src="app.js"></script>
-  </body>
-</html>
+print('Police tablet resource started')
